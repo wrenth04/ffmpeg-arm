@@ -14,7 +14,7 @@ RUN ct-ng-env ./autogen.sh --with-parameter-expansion-string-replace-capable-she
 RUN ct-ng-env make
 RUN ct-ng-env make install
 
-RUN curl -s http://mirrors.zerg.biz/alsa/lib/alsa-lib-1.0.25.tar.bz2 | tar -jx -C /usr/src
+RUN curl -s http://pkgs.fedoraproject.org/repo/pkgs/alsa-lib/alsa-lib-1.0.25.tar.bz2/06fe5819020c6684b991dcffc5471304/alsa-lib-1.0.25.tar.bz2 | tar -jx -C /usr/src
 WORKDIR /usr/src/alsa-lib-1.0.25
 RUN ct-ng-env ./configure --host=arm-unknown-linux-gnueabi --prefix=/opt/ffmpeg
 RUN ct-ng-env make
@@ -22,13 +22,14 @@ RUN ct-ng-env make install
 
 RUN git clone git://git.videolan.org/x264 /usr/src/x264
 WORKDIR /usr/src/x264
+RUN git checkout 3902ae02a0edede5d6c44cb3ee9e24e618c66e6a
 RUN ct-ng-env ./configure --host=arm-unknown-linux-gnueabi --enable-static --cross-prefix='/opt/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-' --extra-cflags='-march=armv6' --extra-ldflags='-march=armv6' --prefix=/opt/ffmpeg
 RUN ct-ng-env make
 RUN ct-ng-env make install
 
 RUN git clone git://source.ffmpeg.org/ffmpeg.git /usr/src/ffmpeg
 WORKDIR /usr/src/ffmpeg
-RUN ct-ng-env ./configure --enable-cross-compile --cross-prefix='/opt/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-' --arch=armel --target-os=linux --enable-gpl --enable-libx264 --enable-nonfree --enable-libaacplus --extra-cflags="-I/opt/ffmpeg/include" --extra-ldflags="-L/opt/ffmpeg/lib" --extra-libs=-ldl --prefix=/opt/ffmpeg
+RUN ct-ng-env ./configure --enable-cross-compile --cross-prefix='/opt/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-' --arch=armel --target-os=linux --enable-gpl --enable-libx264 --enable-nonfree --extra-cflags="-I/opt/ffmpeg/include" --extra-ldflags="-L/opt/ffmpeg/lib" --extra-libs=-ldl --prefix=/opt/ffmpeg
 RUN ct-ng-env make
 RUN ct-ng-env make install
 
